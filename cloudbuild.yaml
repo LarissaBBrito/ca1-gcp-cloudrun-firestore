@@ -1,0 +1,27 @@
+substitutions:
+  _REGION: europe-west1
+  _SERVICE: ca1-cloudrun-firestore
+  _IMAGE: europe-west1-docker.pkg.dev/ca1cloudnative/ca1-repo/ca1-app
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_IMAGE}:${SHORT_SHA}", "."]
+
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "${_IMAGE}:${SHORT_SHA}"]
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      [
+        "run","deploy","${_SERVICE}",
+        "--image","${_IMAGE}:${SHORT_SHA}",
+        "--region","${_REGION}",
+        "--platform","managed",
+        "--allow-unauthenticated",
+        "--set-env-vars","COLLECTION_NAME=items",
+        "--set-secrets","API_TOKEN=API_TOKEN:latest"
+      ]
+
+images:
+  - "${_IMAGE}:${SHORT_SHA}"
