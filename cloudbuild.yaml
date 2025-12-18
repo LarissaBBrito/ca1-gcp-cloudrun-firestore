@@ -13,20 +13,26 @@ steps:
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
-      [
-        "run","deploy","${_SERVICE}",
-        "--image","${_IMAGE}:${SHORT_SHA}",
-        "--region","${_REGION}",
-        "--platform","managed",
-        "--allow-unauthenticated",
-        "--set-env-vars","COLLECTION_NAME=items",
-        "--set-secrets","API_TOKEN=API_TOKEN:latest"
-      ]
+      - run
+      - deploy
+      - "${_SERVICE}"
+      - "--image"
+      - "${_IMAGE}:${SHORT_SHA}"
+      - "--region"
+      - "${_REGION}"
+      - "--platform"
+      - managed
+      - "--allow-unauthenticated"
+      - "--set-env-vars"
+      - "COLLECTION_NAME=items"
+      - "--set-secrets"
+      - "API_TOKEN=API_TOKEN:latest"
 
 images:
   - "${_IMAGE}:${SHORT_SHA}"
 
-  options:
+options:
   logging: CLOUD_LOGGING_ONLY
 
+# trigger
 
